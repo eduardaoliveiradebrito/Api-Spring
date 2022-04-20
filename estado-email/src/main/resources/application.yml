@@ -1,0 +1,30 @@
+server:
+  port: ${PORT:0}
+
+
+    
+
+spring:
+
+  datasource:
+      username: root
+      password: 154154
+      url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/spring
+      driverClassName: com.mysql.cj.jdbc.Driver
+      
+  jpa:
+    hibernate.ddl-auto: update
+        
+  rabbitmq:
+    host: ${RABBITMQ_SERVER_IP:192.168.15.168}
+    port: 5672
+    virtual-host: teste-duda
+    username: ${RABBITMQ_SERVER_USER:duda}
+    password: ${RABBITMQ_SERVER_PASS:duda123}
+    listener: 
+      simple:
+        concurrency: ${RABBITMQ_NUMBER_CONSUMERS:1}
+        prefetch: ${RABBITMQ_NUMBER_MESSAGES:1}
+
+queue:
+  name_queue_duda: teste

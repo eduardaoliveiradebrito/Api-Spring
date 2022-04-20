@@ -6,6 +6,7 @@ import java.time.ZoneId;
 import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.api.estado.dto.EstadoDto;
 import com.api.estado.models.EstadoModel;
+import com.api.estado.publicadorRabbit.QueueSender;
 import com.api.estado.service.EstadoService;
 
 import java.util.*;
@@ -43,6 +45,8 @@ import com.api.estado.service.EstadoService;
 @RequestMapping("/estado") 
 public class EstadoController {
 
+    @Autowired
+    private QueueSender queueSender;
 	final EstadoService estadoService;
 
 	public EstadoController(EstadoService estadoService) {
@@ -61,6 +65,9 @@ public class EstadoController {
 		BeanUtils.copyProperties(estadoDto, estadoModel);                 
 		estadoModel.setData_criacao(LocalDateTime.now(ZoneId.of("UTC"))); 
 
+		//enviar mensagem para o rabit
+		queueSender.send("Foi cadastrado um novo estado!");
+		
 		return ResponseEntity.status(HttpStatus.CREATED).body(estadoService.save(estadoModel));
 	}
 	
@@ -189,6 +196,10 @@ public class EstadoController {
 		estadoModel.setId(estadoModelOptional.get().getId());
 		estadoModel.setData_criacao(estadoModelOptional.get().getData_criacao());		
 		estadoService.delete(estadoModelOptional.get());
+		
+		//enviar mensagem para o rabit
+		queueSender.send("Foi atualizado um novo estado!");
+		
 		return ResponseEntity.status(HttpStatus.OK).body(estadoService.save(estadoModel));
 	}
 }

@@ -1,0 +1,27 @@
+#server:
+  #port: ${PORT:0}
+
+spring:
+
+  rabbitmq:
+    host: ${RABBITMQ_SERVER_IP:localhost}
+    port: 5672
+    #virtual-host: teste-duda
+    username: ${RABBITMQ_SERVER_USER:guest}
+    password: ${RABBITMQ_SERVER_PASS:guest}
+    
+#spring.rabbitmq.host=${RABBITMQ_SERVER_IP:localhost} 
+#spring.rabbitmq.port=5672 
+#spring.rabbitmq.username=${RABBITMQ_SERVER_USER:guest}
+#spring.rabbitmq.password=${RABBITMQ_SERVER_PASS:guest}
+
+#queue.name_queue_duda=teste
+    
+    #listener: 
+      #simple:
+        #concurrency: ${RABBITMQ_NUMBER_CONSUMERS:1}
+        #prefetch: ${RABBITMQ_NUMBER_MESSAGES:1}
+
+queue:
+  name_queue_duda: teste
+
